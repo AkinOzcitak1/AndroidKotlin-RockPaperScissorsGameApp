@@ -43,32 +43,24 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun userClickRock (view : View) {
+        userClicked = true
         binding.imageviewPaperUser.visibility = View.INVISIBLE
         binding.imageviewScissorsUser.visibility = View.INVISIBLE
+        binding.imageviewRockUser.visibility = View.VISIBLE
         userChoice = "rock"
-        userClicked = true
         val random = Random()
         val randomIndex = random.nextInt(3)
         compChoice = choiceArrayC[randomIndex]
         println(compChoice + "userClickRock - CompChoice")
         if (compChoice == "rock") {
-            binding.imageviewScissorsComp.visibility = View.INVISIBLE
-            binding.imageviewPaperComp.visibility = View.INVISIBLE
-            binding.imageviewRockComp.visibility = View.VISIBLE
             game("rock","rock")
             println("rock" + "userClickRock - IfCompChoice==rock")
         }
         if (compChoice == "paper") {
-            binding.imageviewScissorsComp.visibility = View.INVISIBLE
-            binding.imageviewPaperComp.visibility = View.VISIBLE
-            binding.imageviewRockComp.visibility = View.INVISIBLE
             game("rock","paper")
             println("paper" + "userClickRock - IfCompChoice==paper")
         }
         if (compChoice == "scissors") {
-            binding.imageviewScissorsComp.visibility = View.VISIBLE
-            binding.imageviewPaperComp.visibility = View.INVISIBLE
-            binding.imageviewRockComp.visibility = View.INVISIBLE
             game("rock","scissors")
             println("scis" + "userClickRock - IfCompChoice==scissors")
         }
@@ -77,63 +69,47 @@ class GameActivity : AppCompatActivity() {
 
     }
     fun userClickPaper (view : View) {
+        userClicked = true
         binding.imageviewRockUser.visibility = View.INVISIBLE
         binding.imageviewScissorsUser.visibility = View.INVISIBLE
-        userClicked = true
+        binding.imageviewPaperUser.visibility = View.VISIBLE
         userChoice = "paper"
         val random = Random()
         val randomIndex = random.nextInt(3)
         compChoice = choiceArrayC[randomIndex]
         println(compChoice)
         if (compChoice == "rock") {
-            binding.imageviewScissorsComp.visibility = View.INVISIBLE
-            binding.imageviewPaperComp.visibility = View.INVISIBLE
-            binding.imageviewRockComp.visibility = View.VISIBLE
             game("paper","rock")
             println("rock")
         }
         if (compChoice == "paper") {
-            binding.imageviewScissorsComp.visibility = View.INVISIBLE
-            binding.imageviewPaperComp.visibility = View.VISIBLE
-            binding.imageviewRockComp.visibility = View.INVISIBLE
             game("paper","paper")
             println("paper")
         }
         if (compChoice == "scissors") {
-            binding.imageviewScissorsComp.visibility = View.VISIBLE
-            binding.imageviewPaperComp.visibility = View.INVISIBLE
-            binding.imageviewRockComp.visibility = View.INVISIBLE
             game("paper","scissors")
             println("scis")
         }
     }
     fun userClickScissors (view : View) {
+        userClicked = true
         binding.imageviewPaperUser.visibility = View.INVISIBLE
         binding.imageviewRockUser.visibility = View.INVISIBLE
-        userClicked = true
+        binding.imageviewScissorsUser.visibility = View.VISIBLE
         userChoice = "scissors"
         val random = Random()
         val randomIndex = random.nextInt(3)
         compChoice = choiceArrayC[randomIndex]
         println(compChoice)
         if (compChoice == "rock") {
-            binding.imageviewScissorsComp.visibility = View.INVISIBLE
-            binding.imageviewPaperComp.visibility = View.INVISIBLE
-            binding.imageviewRockComp.visibility = View.VISIBLE
             game("scissors","rock")
             println("rock")
         }
         if (compChoice == "paper") {
-            binding.imageviewScissorsComp.visibility = View.INVISIBLE
-            binding.imageviewPaperComp.visibility = View.VISIBLE
-            binding.imageviewRockComp.visibility = View.INVISIBLE
             game("scissors","paper")
             println("paper")
         }
         if (compChoice == "scissors") {
-            binding.imageviewScissorsComp.visibility = View.VISIBLE
-            binding.imageviewPaperComp.visibility = View.INVISIBLE
-            binding.imageviewRockComp.visibility = View.INVISIBLE
             game("scissors","scissors")
             println("scis")
         }
@@ -142,16 +118,17 @@ class GameActivity : AppCompatActivity() {
     fun animateCompImages() {
         runnable = object : Runnable {
             override fun run() {
+                if (userClicked == false) {
                 for (image in imageArrayC) {
                     image.visibility = View.INVISIBLE
                 }
 
 
-                if (userClicked == false) {
+
                     val random = Random()
                     val randomIndex = random.nextInt(3)
                     imageArrayC[randomIndex].visibility = View.VISIBLE
-                    handler.postDelayed(runnable, 300)
+                    handler.postDelayed(runnable, 200)
                 }
             }
         }
@@ -159,26 +136,71 @@ class GameActivity : AppCompatActivity() {
 
     }
 
+    fun showAll() {
+        binding.imageviewScissorsUser.visibility = View.VISIBLE
+        binding.imageviewRockUser.visibility = View.VISIBLE
+        binding.imageviewPaperUser.visibility = View.VISIBLE
+    }
+
+
     fun game(user : String, comp : String) {
 
         if(user == "rock" && comp == "scissors") {
+            binding.imageviewScissorsComp.visibility = View.VISIBLE
+            binding.imageviewPaperComp.visibility = View.INVISIBLE
+            binding.imageviewRockComp.visibility = View.INVISIBLE
             gameScore = gameScore + 1
-            userClicked = false
+            Toast.makeText(this@GameActivity, "YOU WON!!!!!!", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({userClicked = false}, 2000)
             Handler().postDelayed({animateCompImages()}, 3000)
             binding.userScore.text = gameScore.toString()
-        }
+            Handler().postDelayed({showAll()}, 3000)
+            }
+
+
         else if(user == "paper" && comp == "rock") {
+            binding.imageviewScissorsComp.visibility = View.INVISIBLE
+            binding.imageviewPaperComp.visibility = View.INVISIBLE
+            binding.imageviewRockComp.visibility = View.VISIBLE
             gameScore = gameScore + 1
-            userClicked = false
+            Toast.makeText(this@GameActivity, "YOU WON!!!!!!", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({userClicked = false}, 2000)
             Handler().postDelayed({animateCompImages()}, 3000)
-            animateCompImages()
             binding.userScore.text = gameScore.toString()
+            Handler().postDelayed({showAll()}, 3000)
         }
         else if(user == "scissors" && comp == "paper") {
+            binding.imageviewScissorsComp.visibility = View.INVISIBLE
+            binding.imageviewPaperComp.visibility = View.VISIBLE
+            binding.imageviewRockComp.visibility = View.INVISIBLE
             gameScore = gameScore + 1
-            userClicked = false
+            Toast.makeText(this@GameActivity, "YOU WON!!!!!!", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({userClicked = false}, 2000)
             Handler().postDelayed({animateCompImages()}, 3000)
             binding.userScore.text = gameScore.toString()
+            Handler().postDelayed({showAll()}, 3000)
+        }
+        else if(user.equals(comp)) {
+            if (comp == "rock"){
+                binding.imageviewScissorsComp.visibility = View.INVISIBLE
+                binding.imageviewPaperComp.visibility = View.INVISIBLE
+                binding.imageviewRockComp.visibility = View.VISIBLE
+            }
+            if (comp == "paper"){
+                binding.imageviewScissorsComp.visibility = View.INVISIBLE
+                binding.imageviewPaperComp.visibility = View.VISIBLE
+                binding.imageviewRockComp.visibility = View.INVISIBLE
+            }
+            if (comp == "scissors"){
+                binding.imageviewScissorsComp.visibility = View.VISIBLE
+                binding.imageviewPaperComp.visibility = View.INVISIBLE
+                binding.imageviewRockComp.visibility = View.INVISIBLE
+            }
+            Toast.makeText(this@GameActivity, "DRAW!!!!!!", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({userClicked = false}, 2000)
+            Handler().postDelayed({animateCompImages()}, 3000)
+            binding.userScore.text = gameScore.toString()
+            Handler().postDelayed({showAll()}, 3000)
         }
         else{
             val alert = AlertDialog.Builder(this@GameActivity)
@@ -186,6 +208,7 @@ class GameActivity : AppCompatActivity() {
             alert.setMessage("Restart The Game?")
             alert.setPositiveButton("Yes") {dialog, which ->
                 //Restart
+                showAll()
                 gameScore = 0
                 userClicked = false
                 binding.userScore.text = gameScore.toString()
